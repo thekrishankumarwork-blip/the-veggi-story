@@ -1,41 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Veggie Story</title>
-<link rel="stylesheet" href="style.css">
+    <title>The Veggie Story</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <header>
-<h1>The Veggie Story</h1>
-<p>Pure Veg Multicuisine Restaurant</p>
+    <h1>The Veggie Story</h1>
+    <p>Pure Veg Multicuisine Restaurant in Pondicherry</p>
+
+    <a href="#menu">
+        <button>Explore Menu</button>
+    </a>
 </header>
 
-<section class="menu">
+<section id="menu" class="menu">
 
-<div class="item">
-<h2>Veggie Tandoori Platter</h2>
-<p>₹479</p>
-<button>Add to Cart</button>
-</div>
+    <div class="item">
+        <h2>Veggie Tandoori Platter</h2>
+        <p>₹479</p>
+        <button onclick="orderNow('TVS1001')">Add to Cart</button>
+    </div>
 
-<div class="item">
-<h2>Sunday Special Thali</h2>
-<p>₹279</p>
-<button>Add to Cart</button>
-</div>
+    <div class="item">
+        <h2>Sunday Special Thali</h2>
+        <p>₹279</p>
+        <button onclick="orderNow('TVS1002')">Add to Cart</button>
+    </div>
 
-<div class="item">
-<h2>Paneer Butter Masala</h2>
-<p>₹249</p>
-<button>Add to Cart</button>
-</div>
+    <div class="item">
+        <h2>Paneer Butter Masala</h2>
+        <p>₹249</p>
+        <button onclick="orderNow('TVS1003')">Add to Cart</button>
+    </div>
 
 </section>
 
+<section class="contact">
+    <h2>Contact Us</h2>
+    <p>📍 Pondicherry University Road, Pondicherry</p>
+    <p>📞 +91 9876543210</p>
+    <p>📧 info@theveggiestory.com</p>
+</section>
+
+<footer>
+    <p>© 2026 The Veggie Story. All Rights Reserved.</p>
+</footer>
+
 <script src="script.js"></script>
+
 </body>
 </html>
