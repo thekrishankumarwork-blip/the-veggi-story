@@ -1,64 +1,57 @@
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f5f5f5;
+font-family:Arial,sans-serif;
+margin:0;
+background:#f4f4f4;
 }
 
 header{
-    background:#0f6b57;
-    color:white;
-    text-align:center;
-    padding:80px 20px;
+background:#0f6b8f;
+color:white;
+text-align:center;
+padding:60px 20px;
 }
 
-header button{
-    background:white;
-    color:#0f6b57;
-    border:none;
-    padding:12px 25px;
-    border-radius:5px;
-    cursor:pointer;
+.customer{
+text-align:center;
+padding:30px;
+}
+
+.customer input{
+display:block;
+margin:10px auto;
+padding:10px;
+width:250px;
+border:1px solid #ccc;
+border-radius:5px;
 }
 
 .menu{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
-    padding:40px;
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+padding:30px;
 }
 
 .item{
-    background:white;
-    padding:20px;
-    width:250px;
-    border-radius:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    text-align:center;
+background:white;
+padding:20px;
+width:250px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+text-align:center;
 }
 
 button{
-    background:#0f6b57;
-    color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:5px;
-    cursor:pointer;
+background:#0f6b8f;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:5px;
+cursor:pointer;
 }
 
 button:hover{
-    background:#0b4f41;
+background:#0b4f68;
 }
 
-.contact{
-    background:#eeeeee;
-    text-align:center;
-    padding:40px;
-}
-
-footer{
-    background:#222;
-    color:white;
-    text-align:center;
-    padding:15px;
-}
