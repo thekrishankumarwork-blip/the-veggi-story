@@ -1,1 +1,1 @@
-hhtps:wa.me918003084668?text=
+https://wa.me/918003084668?text=
