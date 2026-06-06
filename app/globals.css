@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --background: #0f0f0f;
+    --foreground: #f5f1e8;
+    --primary: #1a5f3f;
+    --primary-light: #2d7a5f;
+    --gold: #d4af37;
+    --gold-light: #e6c547;
+    --cream: #f5f1e8;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    @apply bg-[#0f0f0f];
+  }
+
+  body {
+    @apply bg-[#0f0f0f] text-[#f5f1e8] font-sans antialiased;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20;
+  }
+
+  .container-max {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .gold-accent {
+    @apply text-[#d4af37];
+  }
+
+  .heading-lg {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#f5f1e8];
+  }
+
+  .heading-md {
+    @apply text-3xl sm:text-4xl font-serif font-bold text-[#f5f1e8];
+  }
+
+  .heading-sm {
+    @apply text-xl sm:text-2xl font-serif font-semibold text-[#f5f1e8];
+  }
+
+  .btn-primary {
+    @apply bg-[#d4af37] hover:bg-[#e6c547] text-[#1a5f3f] font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-[#1a5f3f] font-semibold py-3 px-8 rounded-lg transition-all duration-300;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e6c547;
+}
