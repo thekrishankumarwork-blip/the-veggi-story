@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { ChevronDown, Plus, Minus, X } from 'lucide-react'
 
@@ -96,6 +97,11 @@ const menuData: MenuCategory[] = [
 ]
 
 export function Menu() {
+  const searchParams = useSearchParams()
+  const tableParam = searchParams.get('table')
+  const tableNumber = tableParam ? parseInt(tableParam, 10) : null
+  const isTableOrder = tableNumber && tableNumber >= 1 && tableNumber <= 20
+
   const [expandedCategory, setExpandedCategory] = useState<number | null>(0)
   const [cart, setCart] = useState<CartItem[]>([])
   const [showOrderForm, setShowOrderForm] = useState(false)
@@ -104,13 +110,25 @@ export function Menu() {
     customerName: '',
     mobileNumber: '',
     deliveryAddress: '',
-    orderType: 'dine-in',
+    orderType: isTableOrder ? 'dine-in' : 'delivery',
   })
+
+  useEffect(() => {
+    if (isTableOrder) {
+      setFormData((prev) => ({
+        ...prev,
+        orderType: 'dine-in',
+      }))
+    }
+  }, [isTableOrder])
 
   const generateOrderId = () => {
     const today = new Date()
     const dateStr = today.toISOString().split('T')[0].replace(/-/g, '')
     const randomNum = String(Math.floor(Math.random() * 1000)).padStart(3, '0')
+    if (isTableOrder) {
+      return `TVS-${dateStr}-T${tableNumber}-${randomNum}`
+    }
     return `TVS-${dateStr}-${randomNum}`
   }
 
@@ -188,8 +206,15 @@ export function Menu() {
       .map((item) => `${item.name} x${item.quantity} - ₹${item.price * item.quantity}`)
       .join('\n')
 
+    let locationInfo = ''
+    if (isTableOrder) {
+      locationInfo = `Table: ${tableNumber}`
+    } else {
+      locationInfo = `Delivery Address:\n${formData.deliveryAddress}`
+    }
+
     const whatsappMessage = encodeURIComponent(
-      `🍽️ The Veggie Story Order\n\nOrder ID: ${orderId}\n\nCustomer:\n${formData.customerName}\n\nMobile:\n${formData.mobileNumber}\n\nOrder Type:\n${formData.orderType === 'dine-in' ? 'DINE IN' : 'DELIVERY'}\n\nAddress:\n${formData.orderType === 'delivery' ? formData.deliveryAddress : 'Dine In'}\n\nItems Ordered:\n${itemsList}\n\nSubtotal: ₹${subtotal}\nGST (5%): ₹${gst}\n\nGrand Total: ₹${grandTotal}`
+      `🍽️ The Veggie Story Order\n\nOrder ID: ${orderId}\n\nCustomer:\n${formData.customerName}\n\nMobile:\n${formData.mobileNumber}\n\nOrder Type:\n${formData.orderType === 'dine-in' ? 'DINE IN' : 'DELIVERY'}\n\n${locationInfo}\n\nItems Ordered:\n${itemsList}\n\nSubtotal: ₹${subtotal}\nGST (5%): ₹${gst}\n\nGrand Total: ₹${grandTotal}`
     )
 
     const whatsappUrl = `https://wa.me/8003084668?text=${whatsappMessage}`
@@ -216,7 +241,7 @@ export function Menu() {
       customerName: '',
       mobileNumber: '',
       deliveryAddress: '',
-      orderType: 'dine-in',
+      orderType: isTableOrder ? 'dine-in' : 'delivery',
     })
   }
 
@@ -227,6 +252,11 @@ export function Menu() {
           <div className="text-center max-w-2xl mx-auto">
             <div className="mb-8 text-6xl">✓</div>
             <h2 className="heading-md mb-4 text-[#d4af37]">Order Placed Successfully!</h2>
+            {isTableOrder && (
+              <p className="text-[#d4af37] mb-4 text-lg font-semibold">
+                🪑 Ordering from Table {tableNumber}
+              </p>
+            )}
             <p className="text-[#f5f1e8]/80 mb-8 text-lg">
               Thank you for ordering from The Veggie Story.
             </p>
@@ -248,6 +278,14 @@ export function Menu() {
   return (
     <section id="menu" className="section-padding bg-[#1a5f3f]">
       <div className="container-max">
+        {isTableOrder && (
+          <div className="mb-8 p-4 bg-[#d4af37] bg-opacity-20 border border-[#d4af37] rounded-lg text-center">
+            <p className="text-[#d4af37] text-lg font-semibold">
+              🪑 Ordering from Table {tableNumber}
+            </p>
+          </div>
+        )}
+        
         <div className="text-center mb-16">
           <span className="text-[#d4af37] font-semibold text-sm uppercase tracking-widest">
             Our Culinary Journey
@@ -461,11 +499,15 @@ export function Menu() {
                     name="orderType"
                     value={formData.orderType}
                     onChange={handleFormChange}
-                    className="w-full px-4 py-2 bg-[#1a5f3f] border border-[#d4af37] border-opacity-30 text-[#f5f1e8] rounded focus:outline-none focus:border-[#d4af37]"
+                    disabled={isTableOrder}
+                    className="w-full px-4 py-2 bg-[#1a5f3f] border border-[#d4af37] border-opacity-30 text-[#f5f1e8] rounded focus:outline-none focus:border-[#d4af37] disabled:opacity-60"
                   >
                     <option value="dine-in">Dine In</option>
                     <option value="delivery">Delivery</option>
                   </select>
+                  {isTableOrder && (
+                    <p className="text-[#d4af37] text-xs mt-2">Automatically set for table order</p>
+                  )}
                 </div>
 
                 {formData.orderType === 'delivery' && (
