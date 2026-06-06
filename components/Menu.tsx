@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { ChevronDown, Plus, Minus, X } from 'lucide-react'
 
 interface MenuItem {
   id: string
   name: string
   price: number
+  image?: string
 }
 
 interface MenuCategory {
@@ -39,9 +41,9 @@ const menuData: MenuCategory[] = [
     name: 'Starters',
     items: [
       { id: 'start-1', name: 'Hara Bhara Kabab', price: 219 },
-      { id: 'start-2', name: 'Malai Paneer Tikka', price: 299 },
+      { id: 'start-2', name: 'Malai Paneer Tikka', price: 299, image: '/dishes/paneer-tikka.png' },
       { id: 'start-3', name: 'Achari Paneer Tikka', price: 309 },
-      { id: 'start-4', name: 'Veggie Tandoori Platter', price: 479 },
+      { id: 'start-4', name: 'Veggie Tandoori Platter', price: 479, image: '/dishes/veggie-tandoori-platter.png' },
     ],
   },
   {
@@ -51,7 +53,7 @@ const menuData: MenuCategory[] = [
       { id: 'chin-2', name: 'Veg Schezwan Fried Rice', price: 279 },
       { id: 'chin-3', name: 'Crispy Corn', price: 299 },
       { id: 'chin-4', name: 'Paneer Chilli', price: 299 },
-      { id: 'chin-5', name: 'Veg Hakka Noodles', price: 229 },
+      { id: 'chin-5', name: 'Veg Hakka Noodles', price: 229, image: '/dishes/veg-hakka-noodles.png' },
       { id: 'chin-6', name: 'Veg Schezwan Noodles', price: 259 },
     ],
   },
@@ -77,7 +79,7 @@ const menuData: MenuCategory[] = [
     name: 'Beverages',
     items: [
       { id: 'bev-1', name: 'Fresh Lime Soda', price: 69 },
-      { id: 'bev-2', name: 'Cold Coffee', price: 139 },
+      { id: 'bev-2', name: 'Cold Coffee', price: 139, image: '/dishes/cold-coffee.png' },
       { id: 'bev-3', name: 'Tea', price: 69 },
       { id: 'bev-4', name: 'Hot Coffee', price: 129 },
     ],
@@ -85,10 +87,10 @@ const menuData: MenuCategory[] = [
   {
     name: 'Milkshakes',
     items: [
-      { id: 'milk-1', name: 'Vanilla Milkshake', price: 149 },
-      { id: 'milk-2', name: 'Chocolate Milkshake', price: 149 },
-      { id: 'milk-3', name: 'Oreo Milkshake', price: 179 },
-      { id: 'milk-4', name: 'Dry Fruit Milkshake', price: 199 },
+      { id: 'milk-1', name: 'Vanilla Milkshake', price: 149, image: '/dishes/milkshake.png' },
+      { id: 'milk-2', name: 'Chocolate Milkshake', price: 149, image: '/dishes/milkshake.png' },
+      { id: 'milk-3', name: 'Oreo Milkshake', price: 179, image: '/dishes/milkshake.png' },
+      { id: 'milk-4', name: 'Dry Fruit Milkshake', price: 199, image: '/dishes/milkshake.png' },
     ],
   },
 ]
@@ -148,6 +150,15 @@ export function Menu() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0)
   }
 
+  const calculateGST = () => {
+    const subtotal = calculateTotal()
+    return Math.round(subtotal * 0.05 * 100) / 100 // 5% GST
+  }
+
+  const calculateGrandTotal = () => {
+    return Math.round((calculateTotal() + calculateGST()) * 100) / 100
+  }
+
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -170,13 +181,15 @@ export function Menu() {
     }
 
     const orderId = generateOrderId()
-    const total = calculateTotal()
+    const subtotal = calculateTotal()
+    const gst = calculateGST()
+    const grandTotal = calculateGrandTotal()
     const itemsList = cart
       .map((item) => `${item.name} x${item.quantity} - ₹${item.price * item.quantity}`)
       .join('\n')
 
     const whatsappMessage = encodeURIComponent(
-      `🍽️ The Veggie Story Order\n\nOrder ID: ${orderId}\n\nCustomer:\n${formData.customerName}\n\nMobile:\n${formData.mobileNumber}\n\nOrder Type:\n${formData.orderType === 'dine-in' ? 'DINE IN' : 'DELIVERY'}\n\nAddress:\n${formData.orderType === 'delivery' ? formData.deliveryAddress : 'Dine In'}\n\nItems:\n${itemsList}\n\nTotal:\n₹${total}`
+      `🍽️ The Veggie Story Order\n\nOrder ID: ${orderId}\n\nCustomer:\n${formData.customerName}\n\nMobile:\n${formData.mobileNumber}\n\nOrder Type:\n${formData.orderType === 'dine-in' ? 'DINE IN' : 'DELIVERY'}\n\nAddress:\n${formData.orderType === 'delivery' ? formData.deliveryAddress : 'Dine In'}\n\nItems Ordered:\n${itemsList}\n\nSubtotal: ₹${subtotal}\nGST (5%): ₹${gst}\n\nGrand Total: ₹${grandTotal}`
     )
 
     const whatsappUrl = `https://wa.me/8003084668?text=${whatsappMessage}`
@@ -278,6 +291,16 @@ export function Menu() {
                           key={item.id}
                           className="p-4 border border-[#d4af37] border-opacity-20 rounded-lg hover:border-opacity-40 transition-all"
                         >
+                          {item.image && (
+                            <div className="relative w-full h-40 mb-3 rounded-lg overflow-hidden bg-[#0f3a25]">
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
                           <div className="flex justify-between items-start mb-3">
                             <div>
                               <h4 className="text-[#f5f1e8] font-semibold">{item.name}</h4>
@@ -356,11 +379,21 @@ export function Menu() {
                   </div>
 
                   <div className="px-6 py-4 border-t border-[#d4af37] border-opacity-20 bg-[#164d33]">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-[#f5f1e8]/80">Total:</span>
-                      <span className="text-2xl font-serif font-bold text-[#d4af37]">
-                        ₹{calculateTotal()}
-                      </span>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between items-center text-[#f5f1e8]/80">
+                        <span>Subtotal:</span>
+                        <span>₹{calculateTotal()}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[#f5f1e8]/80 text-sm">
+                        <span>GST (5%):</span>
+                        <span>₹{calculateGST()}</span>
+                      </div>
+                      <div className="border-t border-[#d4af37] border-opacity-20 pt-2 flex justify-between items-center">
+                        <span className="text-[#f5f1e8]">Grand Total:</span>
+                        <span className="text-2xl font-serif font-bold text-[#d4af37]">
+                          ₹{calculateGrandTotal()}
+                        </span>
+                      </div>
                     </div>
                     <button
                       onClick={() => setShowOrderForm(true)}
